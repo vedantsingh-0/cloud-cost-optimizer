@@ -5,7 +5,7 @@ import {
   ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell
 } from 'recharts';
 import './App.css';
-import logo from './logo.svg';
+
 const API = 'https://cloud-cost-optimizer-05pk.onrender.com/api';
 const COLORS = ['#6366f1', '#06b6d4', '#f59e0b', '#10b981', '#f43f5e'];
 
@@ -174,7 +174,16 @@ const Dashboard = ({ user, onLogout }) => {
       {/* Sidebar */}
       <div style={s.sidebar}>
    <div style={s.sidebarLogo}>
-  <img src={logo} alt="CloudOptimizer" style={{height: 36}}/>
+  <svg width="140" height="36" viewBox="0 0 140 36" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="18" cy="20" r="10" fill="#6366f1"/>
+    <circle cx="26" cy="14" r="8" fill="#6366f1"/>
+    <circle cx="34" cy="18" r="7" fill="#6366f1"/>
+    <rect x="8" y="20" width="33" height="8" rx="3" fill="#6366f1"/>
+    <polygon points="24,14 28,14 26,20" fill="white"/>
+    <rect x="24.5" y="10" width="3" height="6" rx="1" fill="white"/>
+    <text x="48" y="16" fontFamily="Arial" fontSize="13" fontWeight="700" fill="white">Cloud</text>
+    <text x="48" y="30" fontFamily="Arial" fontSize="13" fontWeight="700" fill="#06b6d4">Optimizer</text>
+  </svg>
 </div> 
         <nav style={s.nav}>
           {[
