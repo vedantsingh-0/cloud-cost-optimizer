@@ -5,7 +5,7 @@ import {
   ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell
 } from 'recharts';
 import './App.css';
-
+import logo from './logo.svg';
 const API = 'https://cloud-cost-optimizer-05pk.onrender.com/api';
 const COLORS = ['#6366f1', '#06b6d4', '#f59e0b', '#10b981', '#f43f5e'];
 
@@ -173,10 +173,9 @@ const Dashboard = ({ user, onLogout }) => {
     <div style={s.dashContainer}>
       {/* Sidebar */}
       <div style={s.sidebar}>
-        <div style={s.sidebarLogo}>
-          <span style={{fontSize: 24}}>☁️</span>
-          <span style={s.sidebarBrand}>CloudOpt</span>
-        </div>
+   <div style={s.sidebarLogo}>
+  <img src={logo} alt="CloudOptimizer" style={{height: 36}}/>
+</div> 
         <nav style={s.nav}>
           {[
             { id: 'overview', icon: '📊', label: 'Overview' },
@@ -190,7 +189,7 @@ const Dashboard = ({ user, onLogout }) => {
               <span style={{fontSize: 16}}>{item.icon}</span>
               <span>{item.label}</span>
             </div>
-          ))}
+         ))}
         </nav>
         <div style={s.sidebarFooter}>
           <div style={s.userBadge}>
