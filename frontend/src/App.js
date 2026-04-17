@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
-  ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell, Legend
+  ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell
 } from 'recharts';
 import './App.css';
 
