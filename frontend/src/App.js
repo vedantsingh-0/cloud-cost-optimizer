@@ -6,7 +6,7 @@ import {
 } from 'recharts';
 import './App.css';
 
-const API = 'http://localhost:5000/api';
+const API = 'https://cloud-cost-optimizer-05pk.onrender.com/api';
 const COLORS = ['#6366f1', '#06b6d4', '#f59e0b', '#10b981', '#f43f5e'];
 
 // ── Login Page ──────────────────────────────────────────────
