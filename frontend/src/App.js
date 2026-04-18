@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
-  ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell
+  ResponsiveContainer, LineChart, Line, PieChart, Pie,Cell
 } from 'recharts';
 import './App.css';
 
@@ -173,18 +173,17 @@ const Dashboard = ({ user, onLogout }) => {
     <div style={s.dashContainer}>
       {/* Sidebar */}
       <div style={s.sidebar}>
-   <div style={s.sidebarLogo}>
-  <svg width="140" height="36" viewBox="0 0 140 36" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="18" cy="20" r="10" fill="#6366f1"/>
-    <circle cx="26" cy="14" r="8" fill="#6366f1"/>
-    <circle cx="34" cy="18" r="7" fill="#6366f1"/>
-    <rect x="8" y="20" width="33" height="8" rx="3" fill="#6366f1"/>
-    <polygon points="24,14 28,14 26,20" fill="white"/>
-    <rect x="24.5" y="10" width="3" height="6" rx="1" fill="white"/>
-    <text x="48" y="16" fontFamily="Arial" fontSize="13" fontWeight="700" fill="white">Cloud</text>
-    <text x="48" y="30" fontFamily="Arial" fontSize="13" fontWeight="700" fill="#06b6d4">Optimizer</text>
-  </svg>
-</div> 
+        <div style={s.sidebarLogo}>
+           <svg width="36" height="36" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="12" cy="20" r="10" fill="#6366f1"/>
+    <circle cx="20" cy="14" r="8" fill="#6366f1"/>
+    <circle cx="28" cy="18" r="7" fill="#6366f1"/>
+    <rect x="2" y="20" width="33" height="8" rx="3" fill="#6366f1"/>
+    <polygon points="18,12 22,12 20,18" fill="white"/>
+    <rect x="18.5" y="8" width="3" height="6" rx="1" fill="white"/>
+           </svg>
+  <span style={s.sidebarBrand}>CloudOpt</span>
+</div>
         <nav style={s.nav}>
           {[
             { id: 'overview', icon: '📊', label: 'Overview' },
@@ -198,7 +197,7 @@ const Dashboard = ({ user, onLogout }) => {
               <span style={{fontSize: 16}}>{item.icon}</span>
               <span>{item.label}</span>
             </div>
-         ))}
+          ))}
         </nav>
         <div style={s.sidebarFooter}>
           <div style={s.userBadge}>
