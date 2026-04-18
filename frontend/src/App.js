@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import LandingPage from './LandingPage';
 import axios from 'axios';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
@@ -470,7 +471,7 @@ const Dashboard = ({ user, onLogout }) => {
 // ── Root App ─────────────────────────────────────────────────
 export default function App() {
   const [user, setUser] = useState(null);
-  const [page, setPage] = useState('login');
+  const [page, setPage] = useState('landing');
 
   useEffect(() => {
     const u = localStorage.getItem('user');
@@ -479,10 +480,11 @@ export default function App() {
   }, []);
 
   if (user) return <Dashboard user={user} onLogout={() => {
-    localStorage.clear(); setUser(null); setPage('login');
+    localStorage.clear(); setUser(null); setPage('landing');
   }}/>;
   if (page === 'register') return <Register onLogin={setUser} switchToLogin={() => setPage('login')}/>;
-  return <Login onLogin={setUser} switchToRegister={() => setPage('register')}/>;
+  if (page === 'login') return <Login onLogin={setUser} switchToRegister={() => setPage('register')}/>;
+  return <LandingPage onGetStarted={() => setPage('register')}/>;
 }
 
 // ── Styles ───────────────────────────────────────────────────
