@@ -1,3 +1,4 @@
+import Pricing from './Pricing';
 import React, { useState, useEffect } from 'react';
 import LandingPage from './LandingPage';
 import axios from 'axios';
@@ -128,14 +129,15 @@ const StatCard = ({ icon, label, value, sub, color }) => (
 );
 
 // ── Dashboard ────────────────────────────────────────────────
-const Dashboard = ({ user, onLogout }) => {
+  const Dashboard = ({ user, onLogout }) => {
   const [monthly, setMonthly] = useState(null);
   const [daily, setDaily] = useState(null);
   const [ec2, setEc2] = useState(null);
   const [s3, setS3] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('overview');
-
+  const [showPricing, setShowPricing] = useState(false);
+ 
   useEffect(() => {
     Promise.all([
       axios.get(`${API}/cost/monthly`),
@@ -159,7 +161,7 @@ const Dashboard = ({ user, onLogout }) => {
     name: s.service.replace('Amazon ', '').replace('AWS ', ''),
     value: parseFloat(s.cost),
   })) || [];
-
+  if (showPricing) return <Pricing user={user} onBack={() => setShowPricing(false)}/>;
   if (loading) return (
     <div style={s.loadingScreen}>
       <div style={s.loadingCard}>
@@ -228,6 +230,9 @@ const Dashboard = ({ user, onLogout }) => {
           <div style={s.dateBadge}>
             📅 {new Date().toLocaleDateString('en-IN', {
               day: 'numeric', month: 'long', year: 'numeric'
+       <button style={s.upgradeBtn} onClick={() => setShowPricing(true)}>
+  ⚡ Upgrade
+</button>
             })}
           </div>
         </div>
@@ -557,4 +562,5 @@ const s = {
   summaryValue: { fontSize: 24, fontWeight: 700, color: '#6366f1', margin: '0 0 4px' },
   summarySub: { fontSize: 12, color: '#94a3b8', margin: 0 },
   bucketIcon: { marginRight: 6 },
+  upgradeBtn: { background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', color: 'white', border: 'none', padding: '8px 20px', borderRadius: 8, cursor: 'pointer', fontSize: 14, fontWeight: 600 },
 };
