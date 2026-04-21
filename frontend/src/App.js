@@ -227,14 +227,14 @@ const StatCard = ({ icon, label, value, sub, color }) => (
             </h1>
             <p style={s.pageSubtitle}>Real-time AWS cost monitoring</p>
           </div>
-          <div style={s.dateBadge}>
+          <div style={sdateBadge}>
             📅 {new Date().toLocaleDateString('en-IN', {
               day: 'numeric', month: 'long', year: 'numeric'
-       <button style={s.upgradeBtn} onClick={() => setShowPricing(true)}>
+            })}
+          </div> <button style={s.upgradeBtn} onClick={() => setShowPricing(true)}>
   ⚡ Upgrade
 </button>
-            })}
-          </div>
+
         </div>
 
         {/* Overview Tab */}
