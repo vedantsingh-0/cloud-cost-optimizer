@@ -12,7 +12,7 @@ const Login = ({ onLogin, switchToRegister }) => {
   const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-
+_
   const handleSubmit = async () => {
     setLoading(true); setError('');
     try {
@@ -176,7 +176,7 @@ const Dashboard = ({ user, onLogout }) => {
   })) || [];
 
   if (showSettings) return <Settings user={user} onBack={() => setShowSettings(false)} onSave={(u) => { onUserUpdate(u); setShowSettings(false); }}/>;
-  if (showPricing) return <Pricing
+  if (showPricing) return <Pricing user={user} onBack={() => setShowPricing(false)}/>;
 
   if (loading) return (
     <div style={s.loadingScreen}>
