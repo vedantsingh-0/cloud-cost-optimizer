@@ -145,14 +145,17 @@ const Dashboard = ({ user, onLogout }) => {
   const [s3, setS3] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('overview');
-  const [showPricing, setShowPricing] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const [showPricing, setShowPricing] = useState(
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
+    const headers = { Authorization: `Bearer ${token}` };
     Promise.all([
-      axios.get(`${API}/cost/monthly`),
-      axios.get(`${API}/cost/daily`),
-      axios.get(`${API}/ec2/idle`),
-      axios.get(`${API}/s3/usage`),
+      axios.get(`${API}/cost/monthly`, { headers }),
+      axios.get(`${API}/cost/daily`, { headers }),
+      axios.get(`${API}/ec2/idle`, { headers }),
+      axios.get(`${API}/s3/usage`, { headers }),
     ]).then(([m, d, e, s3r]) => {
       setMonthly(m.data);
       setDaily(d.data);
@@ -172,7 +175,8 @@ const Dashboard = ({ user, onLogout }) => {
     value: parseFloat(s.cost),
   })) || [];
 
-  if (showPricing) return <Pricing user={user} onBack={() => setShowPricing(false)}/>;
+  if (showSettings) return <Settings user={user} onBack={() => setShowSettings(false)} onSave={(u) => { onUserUpdate(u); setShowSettings(false); }}/>;
+  if (showPricing) return <Pricing
 
   if (loading) return (
     <div style={s.loadingScreen}>
@@ -222,6 +226,9 @@ const Dashboard = ({ user, onLogout }) => {
               <p style={s.userEmail}>{user.email}</p>
             </div>
           </div>
+          <button style={{...s.logoutBtn, marginBottom:8}} onClick={() => setShowSettings(true)}>
+            ⚙️ Settings
+          </button>
           <button style={s.upgradeBtn} onClick={() => setShowPricing(true)}>
             ⚡ Upgrade Plan
           </button>
@@ -439,6 +446,61 @@ const Dashboard = ({ user, onLogout }) => {
   );
 };
 
+const Settings = ({ user, onBack, onSave }) => {
+  const [form, setForm] = useState({ awsAccessKeyId: '', awsSecretAccessKey: '', awsRegion: 'us-east-1' });
+  const [loading, setLoading] = useState(false);
+  const [msg, setMsg] = useState('');
+
+  const handleSave = async () => {
+    setLoading(true);
+    try {
+      const token = localStorage.getItem('token');
+      await axios.post(`${API}/auth/aws-credentials`, form, { headers: { Authorization: `Bearer ${token}` } });
+      const updatedUser = { ...user, isAwsConnected: true };
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+      onSave(updatedUser);
+      setMsg('✅ AWS credentials saved! Your dashboard now shows your real data.');
+    } catch (err) {
+      setMsg('❌ ' + (err.response?.data?.message || 'Failed to save'));
+    }
+    setLoading(false);
+  };
+
+  return (
+    <div style={{minHeight:'100vh', background:'#0a0a0f', color:'white', fontFamily:'monospace', padding:'40px'}}>
+      <button onClick={onBack} style={{background:'none', border:'1px solid #333', color:'#888', padding:'8px 16px', borderRadius:6, cursor:'pointer', marginBottom:32}}>← Back</button>
+      <h1 style={{fontSize:28, fontWeight:700, marginBottom:8}}>⚙️ AWS Settings</h1>
+      <p style={{color:'#666', marginBottom:32}}>Connect your AWS account to see your real cost data</p>
+      {msg && <div style={{padding:'12px 16px', borderRadius:8, background: msg.startsWith('✅') ? '#0d2818' : '#2d0a0a', border: `1px solid ${msg.startsWith('✅') ? '#22c55e' : '#ef4444'}`, marginBottom:24, fontSize:14}}>{msg}</div>}
+      <div style={{maxWidth:500}}>
+        {[
+          {label:'AWS Access Key ID', key:'awsAccessKeyId', type:'text', placeholder:'AKIA...'},
+          {label:'AWS Secret Access Key', key:'awsSecretAccessKey', type:'password', placeholder:'Your secret key'},
+          {label:'AWS Region', key:'awsRegion', type:'text', placeholder:'us-east-1'},
+        ].map(f => (
+          <div key={f.key} style={{marginBottom:20}}>
+            <label style={{display:'block', fontSize:12, color:'#888', marginBottom:6, textTransform:'uppercase', letterSpacing:1}}>{f.label}</label>
+            <input type={f.type} placeholder={f.placeholder} value={form[f.key]}
+              onChange={e => setForm({...form, [f.key]: e.target.value})}
+              style={{width:'100%', padding:'12px 14px', background:'#111', border:'1px solid #333', borderRadius:8, color:'white', fontSize:14, boxSizing:'border-box'}}/>
+          </div>
+        ))}
+        <button onClick={handleSave} disabled={loading}
+          style={{width:'100%', padding:14, background:'#6366f1', color:'white', border:'none', borderRadius:8, fontSize:15, fontWeight:600, cursor:'pointer'}}>
+          {loading ? 'Saving...' : 'Save & Connect AWS'}
+        </button>
+        <div style={{marginTop:24, padding:16, background:'#111', borderRadius:8, border:'1px solid #222', fontSize:13, color:'#666', lineHeight:1.8}}>
+          <p style={{color:'#888', marginBottom:8}}>🔒 Required IAM permissions:</p>
+          <code style={{color:'#6366f1'}}>AWSBillingReadOnlyAccess</code><br/>
+          <code style={{color:'#6366f1'}}>AmazonEC2ReadOnlyAccess</code><br/>
+          <code style={{color:'#6366f1'}}>CloudWatchReadOnlyAccess</code><br/>
+          <code style={{color:'#6366f1'}}>AmazonS3ReadOnlyAccess</code>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export default function App() {
   const [user, setUser] = useState(null);
   const [page, setPage] = useState('landing');
@@ -449,16 +511,20 @@ export default function App() {
     if (u && t) setUser(JSON.parse(u));
   }, []);
 
+  const handleLogin = (userData) => {
+    setUser(userData);
+    localStorage.setItem('user', JSON.stringify(userData));
+  };
+
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    localStorage.clear();
     setUser(null);
     setPage('landing');
   };
 
-  if (user) return <Dashboard user={user} onLogout={handleLogout}/>;
-  if (page === 'register') return <Register onLogin={setUser} switchToLogin={() => setPage('login')}/>;
-  if (page === 'login') return <Login onLogin={setUser} switchToRegister={() => setPage('register')}/>;
+  if (user) return <Dashboard user={user} onLogout={handleLogout} onUserUpdate={handleLogin}/>;
+  if (page === 'register') return <Register onLogin={handleLogin} switchToLogin={() => setPage('login')}/>;
+  if (page === 'login') return <Login onLogin={handleLogin} switchToRegister={() => setPage('register')}/>;
   return <LandingPage onGetStarted={() => setPage('register')}/>;
 }
 
