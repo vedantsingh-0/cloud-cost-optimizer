@@ -528,4 +528,4 @@ const s = {
   summaryLabel: { fontSize:12, color:'#94a3b8', margin:'0 0 8px', textTransform:'uppercase' },
   summaryValue: { fontSize:24, fontWeight:700, color:'#6366f1', margin:'0 0 4px' },
   summarySub: { fontSize:12, color:'#94a3b8', margin:0 },
-};          {loading ? '⏳ Signing in...' : 'Sign in →'}
+};
