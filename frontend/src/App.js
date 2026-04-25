@@ -21,6 +21,8 @@ const Login = ({ onLogin, switchToRegister }) => {
   const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPass, setShowPass] = useState(false);
+
 
   const submit = async () => {
     setLoading(true); setError('');
@@ -47,8 +49,14 @@ const Login = ({ onLogin, switchToRegister }) => {
         {error && <div style={d.errBox}>⚠ {error}</div>}
         <Field label="Email" type="email" value={form.email} placeholder="you@company.com"
           onChange={v => setForm({ ...form, email: v })} onEnter={submit} />
-        <Field label="Password" type="password" value={form.password} placeholder="••••••••"
-          onChange={v => setForm({ ...form, password: v })} onEnter={submit} />
+        <div style={{position:'relative'}}>
+          <Field label="Password" type={showPass ? 'text' : 'password'} value={form.password} placeholder="••••••••"
+            onChange={v => setForm({ ...form, password: v })} onEnter={submit} />
+          <span onClick={() => setShowPass(!showPass)}
+            style={{position:'absolute', right:12, top:32, cursor:'pointer', fontSize:13, color:'#555', userSelect:'none'}}>
+            {showPass ? '🙈 Hide' : '👁 Show'}
+          </span>
+        </div>
         <button style={d.btnPrimary} onClick={submit} disabled={loading}>
           {loading ? 'Signing in…' : 'Sign in →'}
         </button>
@@ -66,6 +74,7 @@ const Register = ({ onLogin, switchToLogin }) => {
   const [form, setForm] = useState({ name: '', email: '', password: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPass, setShowPass] = useState(false);
 
   const submit = async () => {
     setLoading(true); setError('');
