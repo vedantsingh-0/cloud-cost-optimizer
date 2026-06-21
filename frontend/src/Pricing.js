@@ -2,6 +2,10 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 const API = 'https://cloud-cost-optimizer-05pk.onrender.com/api';
+const ACCENT = '#6478ff';
+const ACCENT2 = '#8860ff';
+const headingFont = "'Syne', 'Inter', sans-serif";
+const fontStack = "'Inter', -apple-system, BlinkMacSystemFont, sans-serif";
 
 export default function Pricing({ user, onBack }) {
   const [loading, setLoading] = useState('');
@@ -61,7 +65,7 @@ export default function Pricing({ user, onBack }) {
           name: user?.name || '',
           email: user?.email || '',
         },
-        theme: { color: '#6366f1' },
+        theme: { color: ACCENT },
       };
 
       const rzp = new window.Razorpay(options);
@@ -75,6 +79,14 @@ export default function Pricing({ user, onBack }) {
 
   return (
     <div style={s.page}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+        .pricing-card { transition: all 0.3s ease; }
+        .pricing-card:hover { transform: translateY(-6px); }
+        .pricing-btn { transition: all 0.2s ease; }
+        .pricing-btn:hover:not(:disabled) { transform: translateY(-2px); filter: brightness(1.08); }
+      `}</style>
+
       <div style={s.header}>
         <button style={s.backBtn} onClick={onBack}>← Back to Dashboard</button>
         <h1 style={s.title}>Upgrade Your Plan</h1>
@@ -92,7 +104,7 @@ export default function Pricing({ user, onBack }) {
             name: 'Starter',
             price: 'Free',
             sub: 'forever',
-            color: '#6366f1',
+            color: ACCENT,
             features: ['1 AWS account', 'Cost dashboard', 'Basic alerts', 'Email support'],
             cta: 'Current Plan',
             disabled: true,
@@ -102,7 +114,7 @@ export default function Pricing({ user, onBack }) {
             name: 'Pro',
             price: '₹999',
             sub: '/month',
-            color: '#8b5cf6',
+            color: ACCENT2,
             features: ['5 AWS accounts', 'Advanced analytics', 'Smart alerts', 'AI recommendations', 'Priority support'],
             cta: 'Upgrade to Pro',
             disabled: false,
@@ -113,40 +125,44 @@ export default function Pricing({ user, onBack }) {
             name: 'Enterprise',
             price: '₹4,999',
             sub: '/month',
-            color: '#06b6d4',
+            color: '#22d3ee',
             features: ['Unlimited accounts', 'Custom reports', 'Slack alerts', 'Dedicated support', 'SLA guarantee'],
             cta: 'Upgrade to Enterprise',
             disabled: false,
           },
         ].map(plan => (
-          <div key={plan.id} style={{
+          <div key={plan.id} className="pricing-card" style={{
             ...s.card,
-            border: plan.popular ? `2px solid ${plan.color}` : '1px solid #e2e8f0',
+            border: plan.popular ? `1px solid rgba(100,120,255,0.4)` : '1px solid rgba(255,255,255,0.08)',
+            background: plan.popular ? 'linear-gradient(135deg, rgba(100,120,255,0.12), rgba(136,96,255,0.08))' : 'rgba(255,255,255,0.03)',
+            boxShadow: plan.popular ? '0 0 60px rgba(100,120,255,0.15)' : '0 4px 24px rgba(0,0,0,0.3)',
             transform: plan.popular ? 'scale(1.03)' : 'none',
           }}>
             {plan.popular && (
-              <div style={{...s.badge, background: plan.color}}>Most Popular</div>
+              <div style={{ ...s.badge, background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})` }}>Most Popular</div>
             )}
-            <h2 style={{...s.planName, color: plan.color}}>{plan.name}</h2>
+            <h2 style={{ ...s.planName, color: plan.color }}>{plan.name}</h2>
             <div style={s.priceRow}>
               <span style={s.price}>{plan.price}</span>
               <span style={s.priceSub}>{plan.sub}</span>
             </div>
-            <div style={s.divider}/>
+            <div style={s.divider} />
             {plan.features.map(f => (
-              <p key={f} style={s.feature}>✓ {f}</p>
+              <p key={f} style={s.feature}><span style={{ color: plan.color }}>✓</span> {f}</p>
             ))}
             <button
+              className="pricing-btn"
               style={{
                 ...s.btn,
-                background: plan.disabled ? '#e2e8f0' : plan.color,
-                color: plan.disabled ? '#94a3b8' : 'white',
+                background: plan.disabled ? 'rgba(255,255,255,0.06)' : `linear-gradient(135deg, ${plan.color}, ${plan.id === 'pro' ? '#a78bfa' : plan.id === 'enterprise' ? '#67e8f9' : ACCENT2})`,
+                color: plan.disabled ? 'rgba(255,255,255,0.3)' : '#fff',
                 cursor: plan.disabled ? 'default' : 'pointer',
+                boxShadow: plan.disabled ? 'none' : `0 8px 24px ${plan.color}40`,
               }}
               onClick={() => !plan.disabled && handlePayment(plan.id)}
               disabled={plan.disabled || loading === plan.id}
             >
-              {loading === plan.id ? '⏳ Processing...' : plan.cta}
+              {loading === plan.id ? 'Processing...' : plan.cta}
             </button>
           </div>
         ))}
@@ -164,22 +180,22 @@ export default function Pricing({ user, onBack }) {
 }
 
 const s = {
-  page: { minHeight: '100vh', background: '#f5f7fa', fontFamily: 'Arial, sans-serif', padding: '40px 20px' },
+  page: { minHeight: '100vh', background: '#080810', fontFamily: fontStack, padding: '40px 20px' },
   header: { textAlign: 'center', marginBottom: 48 },
-  backBtn: { background: 'none', border: '1px solid #e2e8f0', padding: '8px 16px', borderRadius: 8, cursor: 'pointer', color: '#64748b', fontSize: 14, marginBottom: 24 },
-  title: { fontSize: 36, fontWeight: 800, color: '#1e1b4b', margin: '0 0 8px' },
-  sub: { fontSize: 16, color: '#64748b', margin: 0 },
-  successBox: { background: '#f0fdf4', border: '1px solid #86efac', color: '#166534', padding: 16, borderRadius: 12, textAlign: 'center', maxWidth: 600, margin: '0 auto 32px', fontSize: 16 },
+  backBtn: { background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', padding: '8px 18px', borderRadius: 8, cursor: 'pointer', color: 'rgba(255,255,255,0.6)', fontSize: 13, fontWeight: 600, marginBottom: 24 },
+  title: { fontSize: 36, fontWeight: 800, color: '#fff', margin: '0 0 8px', fontFamily: headingFont, letterSpacing: -1 },
+  sub: { fontSize: 16, color: 'rgba(255,255,255,0.45)', margin: 0 },
+  successBox: { background: 'rgba(34,197,94,0.08)', border: '1px solid rgba(34,197,94,0.3)', color: '#4ade80', padding: 16, borderRadius: 12, textAlign: 'center', maxWidth: 600, margin: '0 auto 32px', fontSize: 15 },
   grid: { display: 'flex', gap: 24, justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap', maxWidth: 1000, margin: '0 auto 48px' },
-  card: { background: 'white', borderRadius: 20, padding: '36px 28px', width: 280, position: 'relative', boxShadow: '0 4px 20px rgba(0,0,0,0.08)' },
-  badge: { position: 'absolute', top: -12, left: '50%', transform: 'translateX(-50%)', color: 'white', padding: '4px 16px', borderRadius: 20, fontSize: 12, fontWeight: 700, whiteSpace: 'nowrap' },
-  planName: { fontSize: 20, fontWeight: 700, margin: '0 0 16px' },
+  card: { borderRadius: 20, padding: '36px 28px', width: 280, position: 'relative' },
+  badge: { position: 'absolute', top: -12, left: '50%', transform: 'translateX(-50%)', color: 'white', padding: '4px 16px', borderRadius: 100, fontSize: 12, fontWeight: 700, whiteSpace: 'nowrap' },
+  planName: { fontSize: 18, fontWeight: 700, margin: '0 0 16px', fontFamily: headingFont },
   priceRow: { display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 16 },
-  price: { fontSize: 40, fontWeight: 800, color: '#1e1b4b' },
-  priceSub: { fontSize: 14, color: '#94a3b8' },
-  divider: { height: 1, background: '#f1f5f9', margin: '16px 0' },
-  feature: { fontSize: 14, color: '#64748b', margin: '0 0 8px' },
-  btn: { width: '100%', padding: 14, border: 'none', borderRadius: 10, fontSize: 15, fontWeight: 600, marginTop: 16 },
+  price: { fontSize: 38, fontWeight: 800, color: '#fff', fontFamily: headingFont, letterSpacing: -1 },
+  priceSub: { fontSize: 14, color: 'rgba(255,255,255,0.4)' },
+  divider: { height: 1, background: 'rgba(255,255,255,0.08)', margin: '16px 0' },
+  feature: { fontSize: 14, color: 'rgba(255,255,255,0.6)', margin: '0 0 10px', display: 'flex', alignItems: 'center', gap: 8 },
+  btn: { width: '100%', padding: 14, border: 'none', borderRadius: 10, fontSize: 15, fontWeight: 700, marginTop: 16 },
   footer: { textAlign: 'center' },
-  footerText: { color: '#94a3b8', fontSize: 13 },
+  footerText: { color: 'rgba(255,255,255,0.35)', fontSize: 13 },
 };
