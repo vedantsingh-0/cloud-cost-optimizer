@@ -12,12 +12,8 @@ const ACCENT2 = '#8860ff';
 
 const authHeaders = () => ({ Authorization: `Bearer ${localStorage.getItem('token')}` });
 
-// ── Shared style tokens ──────────────────────────────────────
-
 const fontStack = "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
 const headingFont = "'Syne', 'Inter', sans-serif";
-
-// ── Tiny components ──────────────────────────────────────────
 
 const Tag = ({ children, color = ACCENT }) => (
   <span style={{ fontSize: 11, padding: '3px 10px', borderRadius: 100, background: color + '18', color, border: `1px solid ${color}33`, fontFamily: fontStack, fontWeight: 600, letterSpacing: 0.3 }}>
@@ -95,8 +91,6 @@ const DarkTooltip = ({ active, payload, label }) => {
   );
 };
 
-// ── Auth pages ────────────────────────────────────────────────
-
 const AuthWrap = ({ children }) => (
   <div style={{ minHeight: '100vh', background: '#080810', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20, position: 'relative', overflow: 'hidden', fontFamily: fontStack }}>
     <style>{`
@@ -106,7 +100,6 @@ const AuthWrap = ({ children }) => (
       @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
       .auth-in { animation: fadeUp 0.6s cubic-bezier(0.16,1,0.3,1) forwards; }
     `}</style>
-    {/* Glow orbs to match landing page */}
     <div style={{ position: 'fixed', inset: 0, overflow: 'hidden', pointerEvents: 'none', zIndex: 0 }}>
       <div style={{ position: 'absolute', width: 500, height: 500, background: 'radial-gradient(circle, rgba(80,100,255,0.14) 0%, transparent 70%)', top: -120, left: -120, animation: 'pulse-glow 4s ease-in-out infinite' }} />
       <div style={{ position: 'absolute', width: 450, height: 450, background: 'radial-gradient(circle, rgba(120,60,255,0.1) 0%, transparent 70%)', bottom: -120, right: -100, animation: 'pulse-glow 6s ease-in-out infinite 2s' }} />
@@ -246,8 +239,6 @@ const Register = ({ onLogin, switchToLogin }) => {
   );
 };
 
-// ── Settings ──────────────────────────────────────────────────
-
 const Settings = ({ user, onBack, onSave }) => {
   const [form, setForm] = useState({ awsAccessKeyId: '', awsSecretAccessKey: '', awsRegion: 'us-east-1' });
   const [loading, setLoading] = useState(false);
@@ -302,8 +293,6 @@ const Settings = ({ user, onBack, onSave }) => {
     </div>
   );
 };
-
-// ── Admin Panel ───────────────────────────────────────────────
 
 const AdminPanel = ({ onBack }) => {
   const [users, setUsers] = useState([]);
@@ -370,8 +359,6 @@ const AdminPanel = ({ onBack }) => {
   );
 };
 
-// ── Main Dashboard ────────────────────────────────────────────
-
 const Dashboard = ({ user, onLogout, onUserUpdate }) => {
   const [monthly, setMonthly] = useState(null);
   const [daily, setDaily] = useState(null);
@@ -428,9 +415,7 @@ const Dashboard = ({ user, onLogout, onUserUpdate }) => {
         ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: #0d0d18; } ::-webkit-scrollbar-thumb { background: #23233a; border-radius: 4px; }
       `}</style>
 
-      {/* Sidebar */}
       <div style={{ width: 224, background: '#0a0a14', borderRight: '1px solid rgba(255,255,255,0.06)', display: 'flex', flexDirection: 'column', position: 'fixed', height: '100vh', zIndex: 10 }}>
-        {/* Logo */}
         <div style={{ padding: '20px 16px 18px', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
             <svg width="24" height="24" viewBox="0 0 36 36">
@@ -444,7 +429,6 @@ const Dashboard = ({ user, onLogout, onUserUpdate }) => {
           <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: 11, margin: 0 }}>{time.toLocaleTimeString('en-IN', { hour12: false })}</p>
         </div>
 
-        {/* Nav */}
         <nav style={{ padding: '14px 10px', flex: 1 }}>
           <p style={{ color: 'rgba(255,255,255,0.25)', fontSize: 10, letterSpacing: 1.5, margin: '0 0 8px 4px', textTransform: 'uppercase', fontWeight: 700 }}>Navigation</p>
           {navItems.map(item => (
@@ -455,7 +439,6 @@ const Dashboard = ({ user, onLogout, onUserUpdate }) => {
           ))}
         </nav>
 
-        {/* Footer */}
         <div style={{ padding: '12px 10px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
           {user.isAwsConnected && (
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '6px 14px', marginBottom: 4 }}>
@@ -483,9 +466,7 @@ const Dashboard = ({ user, onLogout, onUserUpdate }) => {
         </div>
       </div>
 
-      {/* Main */}
       <div style={{ marginLeft: 224, flex: 1, padding: '28px 32px', minHeight: '100vh', overflowY: 'auto' }}>
-        {/* Topbar */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32, paddingBottom: 20, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
@@ -509,7 +490,6 @@ const Dashboard = ({ user, onLogout, onUserUpdate }) => {
           </div>
         </div>
 
-        {/* AWS not connected */}
         {!user.isAwsConnected && (
           <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 16, padding: '48px', textAlign: 'center', marginBottom: 32 }}>
             <div style={{ fontSize: 44, marginBottom: 16 }}>🔌</div>
@@ -535,7 +515,6 @@ const Dashboard = ({ user, onLogout, onUserUpdate }) => {
 
         {user.isAwsConnected && !loading && !awsError && (
           <>
-            {/* Overview */}
             {tab === 'overview' && (
               <>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 14, marginBottom: 20 }}>
@@ -545,7 +524,6 @@ const Dashboard = ({ user, onLogout, onUserUpdate }) => {
                   <StatCard label="S3 Buckets" value={s3?.summary?.totalBuckets || 0} sub={`${s3?.summary?.totalSizeGB || 0} GB`} color="#22c55e" icon="🪣" />
                 </div>
 
-                {/* Savings */}
                 <div style={{ background: 'linear-gradient(135deg, rgba(100,120,255,0.1), rgba(136,96,255,0.06))', border: '1px solid rgba(100,120,255,0.25)', borderRadius: 16, padding: '24px 28px', marginBottom: 20, display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'relative', overflow: 'hidden' }}>
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
@@ -598,7 +576,6 @@ const Dashboard = ({ user, onLogout, onUserUpdate }) => {
               </>
             )}
 
-            {/* Costs */}
             {tab === 'costs' && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                 <ChartBox title="Daily Breakdown" tag="14D">
@@ -630,7 +607,6 @@ const Dashboard = ({ user, onLogout, onUserUpdate }) => {
               </div>
             )}
 
-            {/* Resources */}
             {tab === 'resources' && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                 <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderLeft: '3px solid #f59e0b', borderRadius: 10, padding: '16px 20px', display: 'flex', alignItems: 'center', gap: 16 }}>
@@ -679,7 +655,6 @@ const Dashboard = ({ user, onLogout, onUserUpdate }) => {
               </div>
             )}
 
-            {/* Storage */}
             {tab === 'storage' && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                 <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderLeft: '3px solid #fbbf24', borderRadius: 10, padding: '16px 20px', display: 'flex', alignItems: 'center', gap: 16 }}>
@@ -722,8 +697,6 @@ const Dashboard = ({ user, onLogout, onUserUpdate }) => {
     </div>
   );
 };
-
-// ── Root ──────────────────────────────────────────────────────
 
 export default function App() {
   const [user, setUser] = useState(null);
